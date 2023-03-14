@@ -6,28 +6,29 @@ import vn.codegym.bai_1.respository.ProductRespository;
 
 import java.util.List;
 
-public class ProductService implements IProductService{
+public class ProductService implements IProductService {
     private IProductRespository productRespository = new ProductRespository();
 
     @Override
     public List<Product> disPlay() {
+
         return productRespository.disPlay();
     }
 
     @Override
     public void create(Product product) {
+
         productRespository.create(product);
     }
 
     @Override
     public void update(int id, Product product) {
-        productRespository.update(id,product);
+        productRespository.update(id, product);
     }
 
     @Override
     public void delete(int id) {
         productRespository.delete(id);
-
     }
 
     @Override
@@ -37,11 +38,11 @@ public class ProductService implements IProductService{
 
     @Override
     public Product getProductById(int id) {
-        for (Product product : productRespository.disPlay()){
-            if (product.getId()==id){
-                return product;
-            }
-        }
-        return null;
+        return productRespository.getProductById(id);
+    }
+
+    @Override
+    public List<Product> findByName(String name) {
+        return productRespository.findByName(name);
     }
 }

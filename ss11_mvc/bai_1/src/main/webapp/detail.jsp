@@ -11,13 +11,12 @@
     <title>Detail Product</title>
 </head>
 <body>
-<form action="/product?action=detail">
 <a href="/products">Back to view</a>
+<%--<a href="/products">Back to view</a>--%>
 <p> Id :${product.id}</p>
 <p> Name :${product.name}</p>
 <p> Price :${product.price}</p>
 <p> Information :${product.information}</p>
 <p> Producer :${product.producer}</p>
-</form>
 </body>
 </html>
