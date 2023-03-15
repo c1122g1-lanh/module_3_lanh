@@ -33,6 +33,9 @@ public class UserServlet extends HttpServlet {
                 case "edit":
                     updateUser(request, response);
                     break;
+                case "find":
+                    findByName(request,response);
+                    break;
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
@@ -57,6 +60,11 @@ public class UserServlet extends HttpServlet {
                 case "delete":
                     deleteUser(request, response);
                     break;
+                case "find":
+                    showSearchUser(request,response);
+                    break;
+                case "sort":
+                    sortList(request,response);
                 default:
                     listUser(request, response);
                     break;
@@ -64,6 +72,23 @@ public class UserServlet extends HttpServlet {
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
+    }
+
+    private void sortList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        List<User> userList = userDaoService.sortList();
+        request.setAttribute("listUser",userList);
+        request.getRequestDispatcher("list.jsp").forward(request,response);
+    }
+
+    private void showSearchUser(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+       response.sendRedirect("searchByName.jsp");
+    }
+
+    private void findByName(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String name = request.getParameter("search");
+        List<User> userList = userDaoService.findByName(name);
+        request.setAttribute("listUser",userList);
+        request.getRequestDispatcher("list.jsp").forward(request,response);
     }
 
     private void listUser(HttpServletRequest request, HttpServletResponse response)

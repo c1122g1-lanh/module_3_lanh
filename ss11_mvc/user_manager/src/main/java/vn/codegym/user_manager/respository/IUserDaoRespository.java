@@ -17,5 +17,9 @@ public interface IUserDaoRespository {
     public boolean deleteUser(int id) throws SQLException;
 
     public boolean updateUser(User user) throws SQLException;
+
+    List<User> findByName(String name);
+
+    List<User> sortList();
 }
 

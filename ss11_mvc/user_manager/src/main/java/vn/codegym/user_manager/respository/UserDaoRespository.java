@@ -13,7 +13,9 @@ public class UserDaoRespository implements IUserDaoRespository {
 
     private static final String INSERT_USERS_SQL = "INSERT INTO users (name, email, country) VALUES (?, ?, ?);";
     private static final String SELECT_USER_BY_ID = "select id,name,email,country from users where id =?";
+    private static final String SELECT_USER_BY_NAME = "select id,name,email,country from users where name = ?;";
     private static final String SELECT_ALL_USERS = "select * from users";
+    private static final String SELECT_ALL_SORT_USERS = "select * from users order by name";
     private static final String DELETE_USERS_SQL = "delete from users where id = ?;";
     private static final String UPDATE_USERS_SQL = "update users set name = ?,email= ?, country =? where id = ?;";
 
@@ -96,10 +98,55 @@ public class UserDaoRespository implements IUserDaoRespository {
         }
         return users;
     }
+    @Override
+    public List<User> findByName(String name) {
+        List<User> userList = new ArrayList<>();
+        try(Connection connection = getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_NAME)){
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                String name1 = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String country = resultSet.getString("country");
+                userList.add(new User(id,name1,email,country));
+            }
+
+        }catch (SQLException e) {
+            printSQLException(e);
+        }
+
+        return userList;
+    }
+
+    @Override
+    public List<User> sortList() {
+        List<User> userList = new ArrayList<>();
+
+        try (Connection connection = getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_SORT_USERS)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()){
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String email = resultSet.getString("email");
+                String country = resultSet.getString("country");
+                userList.add(new User(id,name,email,country));
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return userList;
+
+    }
+
 
     public boolean deleteUser(int id) throws SQLException {
         boolean rowDeleted;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_USERS_SQL);) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_USERS_SQL);) {
             statement.setInt(1, id);
             rowDeleted = statement.executeUpdate() > 0;
         }
@@ -118,6 +165,8 @@ public class UserDaoRespository implements IUserDaoRespository {
         }
         return rowUpdated;
     }
+
+
 
     private void printSQLException(SQLException ex) {
         for (Throwable e : ex) {

@@ -33,4 +33,15 @@ public class UserDaoService implements IUserDaoService {
     public boolean updateUser(User user) throws SQLException {
         return userDaoRespository.updateUser(user);
     }
+
+    @Override
+    public List<User> findByName(String name) {
+        return userDaoRespository.findByName(name);
+    }
+
+    @Override
+    public List<User> sortList() {
+        return userDaoRespository.sortList();
+    }
+
 }

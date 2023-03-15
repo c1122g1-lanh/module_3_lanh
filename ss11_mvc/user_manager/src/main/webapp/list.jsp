@@ -41,6 +41,11 @@
                 </td>
             </tr>
         </c:forEach>
+        <a href="/users?action=find">Search</a>
+        <br><br>
+        <a href="/users">list</a>
+        <br><br>
+        <a href="/users?action=sort">Sort List</a>
     </table>
 </div>
 </body>
