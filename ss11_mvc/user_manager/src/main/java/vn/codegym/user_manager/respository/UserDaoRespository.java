@@ -38,16 +38,37 @@ public class UserDaoRespository implements IUserDaoRespository {
     }
 
     public void insertUser(User user) throws SQLException {
-        System.out.println(INSERT_USERS_SQL);
-        try (Connection connection = getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL)) {
+        Savepoint savepoint = null;
+        Connection connection = getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USERS_SQL);
+        try  {
+            connection.setAutoCommit(false);
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getEmail());
             preparedStatement.setString(3, user.getCountry());
-            System.out.println(preparedStatement);
             preparedStatement.executeUpdate();
+
+            savepoint = connection.setSavepoint();
+
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getCountry());
+            preparedStatement.executeUpdate();
+
+            connection.commit();
         } catch (SQLException e) {
             printSQLException(e);
+            if (savepoint != null){
+                connection.rollback(savepoint);
+                connection.commit();
+            }
+        }finally {
+            try {
+                connection.close();
+                preparedStatement.close();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
         }
     }
 
@@ -189,6 +210,27 @@ public class UserDaoRespository implements IUserDaoRespository {
                 connection.close();
                 callableStatement.close();
 
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Override
+    public void deleteUser1(User user) {
+        Connection connection = getConnection();
+        CallableStatement callableStatement = null;
+        try {
+            callableStatement = (CallableStatement) connection.prepareCall("call delete_user(?)");
+            callableStatement.getInt(1);
+            callableStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                callableStatement.close();
+                connection.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

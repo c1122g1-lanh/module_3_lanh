@@ -64,6 +64,7 @@ public class UserServlet extends HttpServlet {
                     break;
                 case "delete":
                     deleteUser(request, response);
+                    deleteUser1(request, response);
                     break;
                 case "find":
                     showSearchUser(request,response);
@@ -78,6 +79,12 @@ public class UserServlet extends HttpServlet {
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
+    }
+
+    private void deleteUser1(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        User user = new User();
+        userDaoService.deleteUser1(user);
+        request.getRequestDispatcher("list.jsp").forward(request,response);
     }
 
     private void listUser1(HttpServletRequest request, HttpServletResponse response)

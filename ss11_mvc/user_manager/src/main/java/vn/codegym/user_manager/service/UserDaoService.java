@@ -54,4 +54,9 @@ public class UserDaoService implements IUserDaoService {
         userDaoRespository.updateUser1(user);
     }
 
+    @Override
+    public void deleteUser1(User user) {
+        userDaoRespository.deleteUser1(user);
+    }
+
 }

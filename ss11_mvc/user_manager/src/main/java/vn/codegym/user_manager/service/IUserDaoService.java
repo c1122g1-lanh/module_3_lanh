@@ -24,4 +24,6 @@ public interface IUserDaoService {
     List<User> selectAllUsers1() throws SQLException;
 
     void updateUser1(User user);
+
+    void deleteUser1(User user);
 }
