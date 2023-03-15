@@ -29,8 +29,8 @@ public class UserServlet extends HttpServlet {
         try {
             switch (action) {
                 case "create":
-                    insertUser(request, response);
-//                    insertUser1(request, response);
+//                    insertUser(request, response);
+                    insertUser1(request, response);
                     break;
                 case "edit":
                     updateUser(request, response);
@@ -130,11 +130,15 @@ public class UserServlet extends HttpServlet {
 
     }
     private void showNewForm1(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.sendRedirect("create.jsp");
 
     }
-    private void insertUser1(HttpServletRequest request, HttpServletResponse response) {
-
-
+    private void insertUser1(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String country = request.getParameter("country");
+        userDaoService.updateUser1(new User(name,email,country));
+        request.getRequestDispatcher("create.jsp").forward(request,response);
     }
 
     private void insertUser(HttpServletRequest request, HttpServletResponse response)

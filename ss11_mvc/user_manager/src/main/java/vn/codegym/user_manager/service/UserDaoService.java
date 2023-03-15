@@ -49,4 +49,9 @@ public class UserDaoService implements IUserDaoService {
         return userDaoRespository.selectAllUsers1();
     }
 
+    @Override
+    public void updateUser1(User user) {
+        userDaoRespository.updateUser1(user);
+    }
+
 }

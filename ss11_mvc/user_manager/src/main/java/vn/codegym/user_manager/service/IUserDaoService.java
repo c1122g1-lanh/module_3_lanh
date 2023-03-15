@@ -22,4 +22,6 @@ public interface IUserDaoService {
     List<User> sortList();
 
     List<User> selectAllUsers1() throws SQLException;
+
+    void updateUser1(User user);
 }

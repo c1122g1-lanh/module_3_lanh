@@ -171,6 +171,30 @@ public class UserDaoRespository implements IUserDaoRespository {
         return users;
     }
 
+    @Override
+    public void updateUser1(User user) {
+        Connection connection = getConnection();
+        CallableStatement callableStatement = null;
+        try{
+            callableStatement = (CallableStatement) connection.prepareCall("call update_user(?,?,?,?)");
+            callableStatement.setString(1,user.getName());
+            callableStatement.setString(2,user.getEmail());
+            callableStatement.setString(3,user.getCountry());
+            callableStatement.setInt(4,user.getId());
+            callableStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
+            try {
+                connection.close();
+                callableStatement.close();
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
 
     public boolean deleteUser(int id) throws SQLException {
         boolean rowDeleted;
@@ -184,7 +208,8 @@ public class UserDaoRespository implements IUserDaoRespository {
 
     public boolean updateUser(User user) throws SQLException {
         boolean rowUpdated;
-        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(UPDATE_USERS_SQL);) {
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_USERS_SQL);) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getEmail());
             statement.setString(3, user.getCountry());
@@ -211,10 +236,6 @@ public class UserDaoRespository implements IUserDaoRespository {
                 }
             }
         }
-    }
-
-    public static void main(String[] args) throws SQLException {
-
     }
 }
 
