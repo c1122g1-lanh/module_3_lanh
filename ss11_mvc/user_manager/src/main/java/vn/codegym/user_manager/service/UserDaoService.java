@@ -44,4 +44,9 @@ public class UserDaoService implements IUserDaoService {
         return userDaoRespository.sortList();
     }
 
+    @Override
+    public List<User> selectAllUsers1() throws SQLException {
+        return userDaoRespository.selectAllUsers1();
+    }
+
 }

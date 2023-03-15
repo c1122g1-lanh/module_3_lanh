@@ -8,6 +8,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "UserServlet", urlPatterns = "/users")
@@ -29,6 +30,7 @@ public class UserServlet extends HttpServlet {
             switch (action) {
                 case "create":
                     insertUser(request, response);
+//                    insertUser1(request, response);
                     break;
                 case "edit":
                     updateUser(request, response);
@@ -42,6 +44,8 @@ public class UserServlet extends HttpServlet {
         }
     }
 
+
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -52,7 +56,8 @@ public class UserServlet extends HttpServlet {
         try {
             switch (action) {
                 case "create":
-                    showNewForm(request, response);
+//                    showNewForm(request, response);
+                    showNewForm1(request, response);
                     break;
                 case "edit":
                     showEditForm(request, response);
@@ -66,12 +71,29 @@ public class UserServlet extends HttpServlet {
                 case "sort":
                     sortList(request,response);
                 default:
-                    listUser(request, response);
+//                    listUser(request, response);
+                    listUser1(request, response);
                     break;
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
+    }
+
+    private void listUser1(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        List<User> listUser = userDaoService.selectAllUsers1();
+        request.setAttribute("listUser", listUser);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("list.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    private void listUser(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        List<User> listUser = userDaoService.selectAllUsers();
+        request.setAttribute("listUser", listUser);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("list.jsp");
+        dispatcher.forward(request, response);
     }
 
     private void sortList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -91,13 +113,6 @@ public class UserServlet extends HttpServlet {
         request.getRequestDispatcher("list.jsp").forward(request,response);
     }
 
-    private void listUser(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
-        List<User> listUser = userDaoService.selectAllUsers();
-        request.setAttribute("listUser", listUser);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("list.jsp");
-        dispatcher.forward(request, response);
-    }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -112,6 +127,13 @@ public class UserServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("edit.jsp");
         request.setAttribute("user", existingUser);
         dispatcher.forward(request, response);
+
+    }
+    private void showNewForm1(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    }
+    private void insertUser1(HttpServletRequest request, HttpServletResponse response) {
+
 
     }
 

@@ -20,4 +20,6 @@ public interface IUserDaoService {
     List<User> findByName(String name);
 
     List<User> sortList();
+
+    List<User> selectAllUsers1() throws SQLException;
 }

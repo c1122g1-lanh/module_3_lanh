@@ -1,5 +1,6 @@
 package vn.codegym.user_manager.respository;
 
+import com.mysql.cj.jdbc.CallableStatement;
 import vn.codegym.user_manager.model.User;
 
 import java.sql.*;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoRespository implements IUserDaoRespository {
+    private static final String CALL_DISPLAY_USER = "call display_user()";
     private String jdbcURL = "jdbc:mysql://localhost:3306/demo?useSSL=false";
     private String jdbcUsername = "root";
     private String jdbcPassword = "0905796054";
@@ -73,6 +75,7 @@ public class UserDaoRespository implements IUserDaoRespository {
         return user;
     }
 
+
     public List<User> selectAllUsers() {
         // using try-with-resources to avoid closing resources (boiler plate code)
         List<User> users = new ArrayList<>();
@@ -98,6 +101,8 @@ public class UserDaoRespository implements IUserDaoRespository {
         }
         return users;
     }
+
+
     @Override
     public List<User> findByName(String name) {
         List<User> userList = new ArrayList<>();
@@ -142,6 +147,30 @@ public class UserDaoRespository implements IUserDaoRespository {
 
     }
 
+    @Override
+    public List<User> selectAllUsers1() throws SQLException {
+        Connection connection = getConnection();
+        CallableStatement statement = null;
+        ResultSet resultSet= null;
+        List<User> users = new ArrayList<>();
+        try {
+            statement = (CallableStatement) connection.prepareCall(CALL_DISPLAY_USER);
+            resultSet= statement.executeQuery();
+            User user = null;
+            while (resultSet.next()){
+                int id = resultSet.getInt(1);
+                String name = resultSet.getString(2);
+                String email = resultSet.getString(3);
+                String country = resultSet.getString(4);
+                user = new User(id,name,email,country);
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return users;
+    }
+
 
     public boolean deleteUser(int id) throws SQLException {
         boolean rowDeleted;
@@ -182,6 +211,10 @@ public class UserDaoRespository implements IUserDaoRespository {
                 }
             }
         }
+    }
+
+    public static void main(String[] args) throws SQLException {
+
     }
 }
 

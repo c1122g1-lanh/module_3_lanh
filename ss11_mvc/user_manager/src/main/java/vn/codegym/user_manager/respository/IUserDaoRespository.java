@@ -21,5 +21,7 @@ public interface IUserDaoRespository {
     List<User> findByName(String name);
 
     List<User> sortList();
+
+    List<User> selectAllUsers1() throws SQLException;
 }
 
